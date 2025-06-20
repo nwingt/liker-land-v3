@@ -26,26 +26,6 @@ export const useAccountStore = defineStore('account', () => {
   const isLoggingIn = ref(false)
   const isConnectModalOpen = ref(false)
 
-  // TODO: Remove this when legacy mode is fully deprecated
-  const isEVMModeActive = ref(true)
-  const isEVMMode = computed({
-    get: () => isEVMModeActive.value,
-    set: async (value) => {
-      const prevValue = isEVMModeActive.value
-      isEVMModeActive.value = value
-      if (!user.value) return
-      try {
-        await updateSettings({ isEVMModeActive: value })
-      }
-      catch (error) {
-        isEVMModeActive.value = prevValue
-        handleError(error, {
-          description: $t('account_page_update_settings_error'),
-        })
-      }
-    },
-  })
-
   watch(
     () => user.value,
     (user) => {
@@ -425,7 +405,7 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
-  async function updateSettings(params: { isEVMModeActive?: boolean } = {}) {
+  async function updateSettings(params: Record<string, unknown>) {
     await $fetch('/api/account/settings', { method: 'POST', body: params })
     await refreshSession()
   }
@@ -470,7 +450,6 @@ export const useAccountStore = defineStore('account', () => {
     likeWallet,
     isLoggingIn,
     isConnectModalOpen,
-    isEVMMode,
 
     login,
     logout,
