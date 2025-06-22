@@ -1,68 +1,50 @@
-export interface FetchLikeCoinChainNFTClassesConfig {
-  classOwner?: string
+export interface QueryOptions {
   reverse?: boolean
   limit?: number
   key?: string
   nocache?: boolean
 }
 
-export interface FetchLikeCoinChainNFTClassesResponseData {
-  data: NFTClass[]
-  pagination: {
-    next_key?: number
-    count: number
-  }
-}
-
-export function fetchLikeCoinChainNFTClasses({
-  classOwner,
-  reverse = true,
-  limit = 100,
-  key,
-  nocache,
-}: FetchLikeCoinChainNFTClassesConfig) {
-  const query: Record<string, string> = {}
-  if (reverse) query['pagination.reverse'] = reverse.toString()
-  if (limit) query['pagination.limit'] = limit.toString()
-  if (key) query['pagination.key'] = key
-  if (nocache) query.ts = `${Math.round(new Date().getTime() / 1000)}`
-  const { fetch } = useLikeCoinEVMChainAPI()
-  return fetch<FetchLikeCoinChainNFTClassesResponseData>(`/account/${classOwner}/booknfts`, {
-    query,
-  })
-};
-
-export interface FetchLikeCoinChainNFTsConfig {
-  nftOwner?: string
-  reverse?: boolean
-  limit?: number
-  key?: string
-  nocache?: boolean
-}
-
-export interface FetchLikeCoinChainNFTsResponseData {
-  data: NFT[]
-  pagination: {
-    next_key?: number
-    count: number
-  }
-}
-
-export function fetchLikeCoinChainNFTs({
-  nftOwner,
+export function getQueryOptions({
   reverse = true,
   limit = 30,
   key,
   nocache,
-}: FetchLikeCoinChainNFTsConfig) {
+}: QueryOptions = {}) {
   const query: Record<string, string> = {}
   if (reverse) query['pagination.reverse'] = reverse.toString()
   if (limit) query['pagination.limit'] = limit.toString()
   if (key) query['pagination.key'] = key
-  if (nocache) query.ts = `${Math.round(new Date().getTime() / 1000)}`
+  if (nocache) query.ts = Date.now().toString()
+  return query
+}
+
+export interface PaginationInfo {
+  next_key?: number
+  count: number
+}
+
+export interface FetchNFTClassesByOwnerWalletAddressResponseData {
+  data: NFTClass[]
+  pagination: PaginationInfo
+}
+
+export function fetchNFTClassesByOwnerWalletAddress(walletAddress: string, options: QueryOptions) {
   const { fetch } = useLikeCoinEVMChainAPI()
-  return fetch<FetchLikeCoinChainNFTsResponseData>(`/account/${nftOwner}/tokens`, {
-    query,
+  return fetch<FetchNFTClassesByOwnerWalletAddressResponseData>(`/account/${walletAddress}/booknfts`, {
+    query: getQueryOptions(options),
+  })
+};
+
+export interface FetchNFTsByWalletAddressResponseData {
+  data: NFT[]
+  pagination: PaginationInfo
+}
+
+export function fetchNFTsByOwnerWalletAddress(walletAddress: string, options: QueryOptions) {
+  const { fetch } = useLikeCoinEVMChainAPI()
+  return fetch<FetchNFTsByWalletAddressResponseData>(`/account/${walletAddress}/tokens`, {
+    query: getQueryOptions(options),
   })
 };
 
