@@ -405,11 +405,6 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
-  async function updateSettings(params: Record<string, unknown>) {
-    await $fetch('/api/account/settings', { method: 'POST', body: params })
-    await refreshSession()
-  }
-
   async function refreshSessionInfo() {
     await $fetch('/api/account/refresh', { method: 'POST' })
     await refreshSession()
@@ -453,7 +448,6 @@ export const useAccountStore = defineStore('account', () => {
 
     login,
     logout,
-    updateSettings,
     refreshSessionInfo,
     exportPrivateKey,
   }
