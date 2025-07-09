@@ -263,19 +263,19 @@ async function handleCustomerServiceLinkButtonClick() {
 async function handleClearReaderCacheButtonClick() {
   useLogEvent('clear_reader_cache')
 
-  if (!window.caches) return
-
   try {
-    const keys = await window.caches.keys()
-    if (keys?.length) {
-      const bookKeys = keys.filter(key => key.startsWith(config.public.cacheKeyPrefix))
-      await Promise.all(bookKeys.map(key => caches.delete(key)))
+    if (window.caches) {
+      const keys = await window.caches.keys()
+      if (keys?.length) {
+        const bookKeys = keys.filter(key => key.startsWith(config.public.cacheKeyPrefix))
+        await Promise.all(bookKeys.map(key => caches.delete(key)))
 
-      if (window.localStorage) {
-        keys.forEach((key) => {
-          // TODO: Refactor locations key
-          window.localStorage.removeItem(`${key}-locations`)
-        })
+        if (window.localStorage) {
+          bookKeys.forEach((key) => {
+            // TODO: Refactor locations key
+            window.localStorage.removeItem(`${key}-locations`)
+          })
+        }
       }
     }
 
