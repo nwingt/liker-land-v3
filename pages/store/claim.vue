@@ -133,6 +133,7 @@ async function checkItemsDelivery() {
   // TODO: Handle multiple items
   try {
     await Promise.all([
+      bookshelfStore.fetchNFTByNFTClassIdAndOwnerWalletAddress(nftClassId.value as string, user.value?.evmWallet as string),
       // Check if the NFT class is already on the bookshelf
       bookshelfStore.fetchItems({ isRefresh: true }),
       // Check if the NFT class owners include the user
