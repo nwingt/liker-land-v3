@@ -66,15 +66,18 @@
                 </ul>
                 <div
                   :class="[
-                    'absolute',
-                    'inset-x-0',
+                    ...scrollIndicatorClasses,
+                    'top-0',
+                    'bg-gradient-to-b',
+                    { 'opacity-0': isMobileNavItemListScrolledToTop },
+                  ]"
+                />
+                <div
+                  :class="[
+                    ...scrollIndicatorClasses,
                     'bottom-0',
-                    'h-12',
                     'bg-gradient-to-t',
-                    'from-white',
-                    'to-transparent',
                     { 'opacity-0': isMobileNavItemListScrolledToBottom },
-                    'pointer-events-none',
                   ]"
                 />
               </template>
@@ -723,7 +726,21 @@ function decreaseFontSize() {
 
 const mobileNavItemListElement = useTemplateRef<HTMLUListElement>('mobileNavItemListElement')
 const { arrivedState: mobileNavItemListScrollArrivedState } = useScroll(mobileNavItemListElement)
-const { bottom: isMobileNavItemListScrolledToBottom } = toRefs(mobileNavItemListScrollArrivedState)
+const {
+  top: isMobileNavItemListScrolledToTop,
+  bottom: isMobileNavItemListScrolledToBottom
+} = toRefs(mobileNavItemListScrollArrivedState)
+const scrollIndicatorClasses = [
+  'absolute',
+
+  'inset-x-0',
+
+  'h-12',
+
+  'from-white',
+  'to-transparent',
+  'pointer-events-none',
+]
 const mobileActiveNavItemElements = useTemplateRef<HTMLLIElement[]>('mobileActiveNavItemElements')
 
 async function handleMobileTocOpen(open: boolean) {
