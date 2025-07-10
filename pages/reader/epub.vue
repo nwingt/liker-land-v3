@@ -25,7 +25,7 @@
                 class: 'rounded-full',
               }"
               :ui="{
-                content: 'mx-5 mb-5 border border-gray-500 divide-gray-500 rounded-2xl overflow-hidden',
+                content: 'bottom-safe mx-5 mb-5 border border-gray-500 divide-gray-500 rounded-2xl overflow-hidden',
                 body: 'relative p-0 sm:p-0 overflow-hidden',
               }"
               @update:open="handleMobileTocOpen"
