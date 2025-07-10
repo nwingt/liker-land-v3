@@ -22,10 +22,10 @@ export default function (params: {
       config.public.cacheKeyPrefix,
       'book-file',
       nftClassId.value,
-      nftId.value || '',
+      nftId.value,
       fileIndex.value,
       bookInfo.isCustomMessageEnabled.value ? '1' : '0',
-    ].filter(Boolean).join('-'),
+    ].filter(value => value !== undefined).join('-'),
   )
 
   const bookFileURLWithCORS = computed(() =>
