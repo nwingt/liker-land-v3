@@ -171,23 +171,14 @@
               </USlideover>
             </template>
 
-            <USlideover
-              :title="$t('reader_display_options_button')"
-              :close="{
-                color: 'neutral',
-                variant: 'outline',
-                class: 'rounded-full',
-              }"
-              side="bottom"
-            >
+            <BottomSlideover :title="$t('reader_display_options_button')">
               <UButton
-                class="laptop:hidden"
                 icon="i-material-symbols-text-fields"
                 variant="ghost"
               />
 
               <template #body>
-                <div class="flex gap-2 items-center">
+                <div class="flex gap-2 items-center p-6 pt-4">
                   <UButton
                     icon="i-material-symbols-text-decrease-outline-rounded"
                     variant="ghost"
@@ -205,34 +196,7 @@
                   />
                 </div>
               </template>
-            </USlideover>
-            <UPopover>
-              <UButton
-                class="max-laptop:hidden"
-                icon="i-material-symbols-text-fields"
-                :label="$t('reader_display_options_button')"
-                variant="ghost"
-              />
-
-              <template #content>
-                <div class="flex gap-2 items-center p-2">
-                  <UButton
-                    icon="i-material-symbols-text-decrease-outline-rounded"
-                    variant="ghost"
-                    @click="decreaseFontSize"
-                  />
-                  <USelect
-                    v-model="fontSize"
-                    :items="FONT_SIZE_OPTIONS"
-                  />
-                  <UButton
-                    icon="i-material-symbols-text-increase-rounded"
-                    variant="ghost"
-                    @click="increaseFontSize"
-                  />
-                </div>
-              </template>
-            </UPopover>
+            </BottomSlideover>
           </div>
         </template>
       </ReaderHeader>
