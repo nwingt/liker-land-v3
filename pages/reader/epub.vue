@@ -14,20 +14,9 @@
       >
         <template #trailing>
           <div class="relative flex justify-end items-center gap-2">
-            <USlideover
+            <BottomSlideover
               v-model:open="isMobileTocOpen"
               :title="$t('reader_toc_title')"
-              side="bottom"
-              :overlay="false"
-              :close="{
-                color: 'neutral',
-                variant: 'soft',
-                class: 'rounded-full',
-              }"
-              :ui="{
-                content: 'bottom-safe mx-5 mb-5 border border-gray-500 divide-gray-500 rounded-2xl overflow-hidden',
-                body: 'relative p-0 sm:p-0 overflow-hidden',
-              }"
               @update:open="handleMobileTocOpen"
             >
               <UButton
@@ -38,10 +27,7 @@
               />
 
               <template #body>
-                <ul
-                  ref="mobileNavItemListElement"
-                  class="divide-gray-500 divide-y pb-2 max-h-[40vh] overflow-y-auto"
-                >
+                <ul class="divide-gray-500 divide-y">
                   <li
                     v-for="item in navItems"
                     :key="item.href"
@@ -64,24 +50,8 @@
                     />
                   </li>
                 </ul>
-                <div
-                  :class="[
-                    ...scrollIndicatorClasses,
-                    'top-0',
-                    'bg-gradient-to-b',
-                    { 'opacity-0': isMobileNavItemListScrolledToTop },
-                  ]"
-                />
-                <div
-                  :class="[
-                    ...scrollIndicatorClasses,
-                    'bottom-0',
-                    'bg-gradient-to-t',
-                    { 'opacity-0': isMobileNavItemListScrolledToBottom },
-                  ]"
-                />
               </template>
-            </USlideover>
+            </BottomSlideover>
             <UButton
               class="max-laptop:hidden"
               icon="i-material-symbols-format-list-bulleted"
@@ -724,23 +694,6 @@ function decreaseFontSize() {
   adjustFontSize(-1)
 }
 
-const mobileNavItemListElement = useTemplateRef<HTMLUListElement>('mobileNavItemListElement')
-const { arrivedState: mobileNavItemListScrollArrivedState } = useScroll(mobileNavItemListElement)
-const {
-  top: isMobileNavItemListScrolledToTop,
-  bottom: isMobileNavItemListScrolledToBottom
-} = toRefs(mobileNavItemListScrollArrivedState)
-const scrollIndicatorClasses = [
-  'absolute',
-
-  'inset-x-0',
-
-  'h-12',
-
-  'from-white',
-  'to-transparent',
-  'pointer-events-none',
-]
 const mobileActiveNavItemElements = useTemplateRef<HTMLLIElement[]>('mobileActiveNavItemElements')
 
 async function handleMobileTocOpen(open: boolean) {
