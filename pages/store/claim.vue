@@ -140,6 +140,7 @@ async function checkItemsDeliveryThroughIndexer() {
 }
 
 const isCheckingItemsDelivery = ref(false)
+const hasBypassedIndexer = ref(false)
 
 async function waitForItemsDelivery({ timeout = 30000, interval = 3000 } = {}) {
   if (isCheckingItemsDelivery.value || !isAutoDeliver.value) return
@@ -154,6 +155,7 @@ async function waitForItemsDelivery({ timeout = 30000, interval = 3000 } = {}) {
     // If indexer is not available or the items are not delivered yet, fallback to calling contract functions
     if (!canStartReading.value) {
       await bookshelfStore.fetchNFTByNFTClassIdAndOwnerWalletAddress(nftClassId.value as string, user.value?.evmWallet as string)
+      hasBypassedIndexer.value = true
     }
   }
   catch (error) {
@@ -281,7 +283,10 @@ async function handleLogin(connectorId: string) {
   await accountStore.login(connectorId)
 }
 
-const readerRoute = computed(() => bookInfo.getReaderRoute.value({ nftId: receivedNFTId.value }))
+const readerRoute = computed(() => bookInfo.getReaderRoute.value({
+  nftId: receivedNFTId.value,
+  shouldCustomMessageDisabled: hasBypassedIndexer.value,
+}))
 
 function handleStartReadingButtonClick() {
   if (!readerRoute.value) {
