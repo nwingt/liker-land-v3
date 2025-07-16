@@ -154,7 +154,7 @@ async function waitForItemsDelivery({ timeout = 30000, interval = 3000 } = {}) {
     }
     // If indexer is not available or the items are not delivered yet, fallback to calling contract functions
     if (!canStartReading.value) {
-      await bookshelfStore.fetchNFTByNFTClassIdAndOwnerWalletAddress(nftClassId.value as string, user.value?.evmWallet as string)
+      await bookshelfStore.fetchNFTByNFTClassIdAndOwnerWalletAddressThroughContract(nftClassId.value as string, user.value?.evmWallet as string)
       hasBypassedIndexer.value = true
     }
   }
