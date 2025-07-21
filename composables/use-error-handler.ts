@@ -79,6 +79,9 @@ export default function () {
     else if (rawErrorMessage === 'Internal server error' || statusCode === 500) {
       description = $t('error_internal_server_error')
     }
+    else if (rawErrorMessage.includes('no response')) {
+      description = $t('error_network_error')
+    }
     else {
       description = parseErrorData<string>(error, 'description') || $t('error_unknown')
     }
