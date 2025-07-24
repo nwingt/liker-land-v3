@@ -19,7 +19,7 @@
     <code
       v-if="props.error?.data?.rawMessage"
       class="block not-first:mt-4 px-2 py-1 text-xs font-mono font-medium rounded-md border border-gray-300 bg-gray-100 break-all whitespace-pre-wrap"
-      v-text="props.error"
+      v-text="props.error?.data?.rawMessage"
     />
 
     <UButton
