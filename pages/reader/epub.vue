@@ -600,6 +600,12 @@ useSwipe(
   renditionViewWindow,
   {
     onSwipeEnd: (_: TouchEvent, direction: UseSwipeDirection) => {
+      const selection = renditionViewWindow.value?.getSelection()
+      if (selection && selection.rangeCount > 0) {
+        // Do not navigate when selecting text
+        return
+      }
+
       switch (direction) {
         case 'left':
           turnPageRight()
