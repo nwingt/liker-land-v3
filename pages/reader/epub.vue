@@ -418,10 +418,12 @@ async function loadEPub() {
         const range = width * 0.45
         const x = event.clientX % width // Normalize x to be within the window
         if (x < range) {
-          handleLeftArrowButtonClick()
+          turnPageLeft()
+          useLogEvent('reader_navigate_button_arrow_mobile')
         }
         else if (width - x < range) {
-          handleRightArrowButtonClick()
+          turnPageRight()
+          useLogEvent('reader_navigate_button_arrow_mobile')
         }
       }
     })
@@ -505,7 +507,7 @@ function prevPage() {
   rendition.value?.prev()
 }
 
-function handleLeftArrowButtonClick() {
+function turnPageLeft() {
   if (isRightToLeft.value) {
     nextPage()
   }
@@ -514,7 +516,7 @@ function handleLeftArrowButtonClick() {
   }
 }
 
-function handleRightArrowButtonClick() {
+function turnPageRight() {
   if (isRightToLeft.value) {
     prevPage()
   }
@@ -557,12 +559,42 @@ function onClickTTSPlay() {
   })
 }
 
+function handleLeftArrowButtonClick() {
+  turnPageLeft()
+  useLogEvent('reader_navigate_button_arrow')
+}
+
+function handleRightArrowButtonClick() {
+  turnPageRight()
+  useLogEvent('reader_navigate_button_arrow')
+}
+
 const isShiftPressed = useKeyModifier('Shift')
-onKeyStroke('ArrowRight', handleRightArrowButtonClick)
-onKeyStroke('ArrowLeft', handleLeftArrowButtonClick)
-onKeyStroke('ArrowDown', nextPage)
-onKeyStroke('ArrowUp', prevPage)
-onKeyStroke('Space', () => isShiftPressed.value ? prevPage() : nextPage())
+onKeyStroke('ArrowRight', () => {
+  turnPageRight()
+  useLogEvent('reader_navigate_key_arrow_horizontal')
+})
+onKeyStroke('ArrowLeft', () => {
+  turnPageLeft()
+  useLogEvent('reader_navigate_key_arrow_horizontal')
+})
+onKeyStroke('ArrowDown', () => {
+  nextPage()
+  useLogEvent('reader_navigate_key_arrow_vertical')
+})
+onKeyStroke('ArrowUp', () => {
+  prevPage()
+  useLogEvent('reader_navigate_key_arrow_vertical')
+})
+onKeyStroke('Space', () => {
+  if (isShiftPressed.value) {
+    prevPage()
+  }
+  else {
+    nextPage()
+  }
+  useLogEvent('reader_navigate_key_space')
+})
 
 useSwipe(
   renditionViewWindow,
@@ -570,16 +602,20 @@ useSwipe(
     onSwipeEnd: (_: TouchEvent, direction: UseSwipeDirection) => {
       switch (direction) {
         case 'left':
-          handleRightArrowButtonClick()
+          turnPageRight()
+          useLogEvent('reader_navigate_swipe_horizontal')
           break
         case 'right':
-          handleLeftArrowButtonClick()
+          turnPageLeft()
+          useLogEvent('reader_navigate_swipe_horizontal')
           break
         case 'up':
           nextPage()
+          useLogEvent('reader_navigate_swipe_vertical')
           break
         case 'down':
           prevPage()
+          useLogEvent('reader_navigate_swipe_vertical')
           break
         default:
           break
