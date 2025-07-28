@@ -186,7 +186,7 @@
 </template>
 
 <script setup lang="ts">
-import { useStorage } from '@vueuse/core'
+import { useStorage, type UseSwipeDirection } from '@vueuse/core'
 import ePub, {
   type Rendition as RenditionBase,
   type NavItem,
@@ -311,6 +311,7 @@ watch(fontSize, (size) => {
 
 let cleanUpClickListener: (() => void) | undefined
 const renditionElement = useTemplateRef<HTMLDivElement>('reader')
+const renditionViewWindow = ref<Window | undefined>(undefined)
 
 async function loadEPub() {
   const buffer = await loadFileAsBuffer(bookFileURLWithCORS.value, bookFileCacheKey.value)
@@ -399,6 +400,7 @@ async function loadEPub() {
   rendition.value.on('rendered', (section: Section, view: EpubView) => {
     currentSectionIndex.value = section.index
     isRightToLeft.value = view.settings.direction === 'rtl'
+    renditionViewWindow.value = view.window
 
     if (cleanUpClickListener) {
       cleanUpClickListener()
@@ -561,6 +563,30 @@ onKeyStroke('ArrowLeft', handleLeftArrowButtonClick)
 onKeyStroke('ArrowDown', nextPage)
 onKeyStroke('ArrowUp', prevPage)
 onKeyStroke('Space', () => isShiftPressed.value ? prevPage() : nextPage())
+
+useSwipe(
+  renditionViewWindow,
+  {
+    onSwipeEnd: (_: TouchEvent, direction: UseSwipeDirection) => {
+      switch (direction) {
+        case 'left':
+          handleRightArrowButtonClick()
+          break
+        case 'right':
+          handleLeftArrowButtonClick()
+          break
+        case 'up':
+          nextPage()
+          break
+        case 'down':
+          prevPage()
+          break
+        default:
+          break
+      }
+    },
+  },
+)
 </script>
 
 <style>
