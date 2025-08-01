@@ -1,7 +1,5 @@
 import { FetchError } from 'ofetch'
 
-import { checkIsEVMAddress } from '~/utils'
-
 export default defineEventHandler(async (event) => {
   let body: {
     walletAddress: string

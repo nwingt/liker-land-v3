@@ -1,7 +1,5 @@
 import { jwtDecode } from 'jwt-decode'
 
-import { checkIsEVMAddress } from '~/utils'
-
 export default defineEventHandler(async (event) => {
   let body: {
     walletAddress: string
