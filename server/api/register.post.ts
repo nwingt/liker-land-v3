@@ -12,39 +12,45 @@ export default defineEventHandler(async (event) => {
     loginMethod: string
     magicUserId?: string
     magicDIDToken?: string
-  }
+  } | undefined
   try {
     body = await readBody(event)
-    if (!body.walletAddress) {
-      throw createError({
-        status: 400,
-        message: 'REGISTER_MISSING_ADDRESS',
-      })
-    }
-    if (!checkIsEVMAddress(body.walletAddress)) {
-      throw createError({
-        status: 400,
-        message: 'REGISTER_INVALID_ADDRESS',
-      })
-    }
-    if (!body.message) {
-      throw createError({
-        status: 400,
-        message: 'REGISTER_MISSING_MESSAGE',
-      })
-    }
-    if (!body.signature) {
-      throw createError({
-        status: 400,
-        message: 'REGISTER_MISSING_SIGNATURE',
-      })
-    }
   }
   catch (error) {
     console.error(error)
     throw createError({
       status: 400,
       message: 'REGISTER_INVALID_BODY',
+    })
+  }
+  if (!body) {
+    throw createError({
+      status: 400,
+      message: 'REGISTER_MISSING_BODY',
+    })
+  }
+  if (!body.walletAddress) {
+    throw createError({
+      status: 400,
+      message: 'REGISTER_MISSING_ADDRESS',
+    })
+  }
+  if (!checkIsEVMAddress(body.walletAddress)) {
+    throw createError({
+      status: 400,
+      message: 'REGISTER_INVALID_ADDRESS',
+    })
+  }
+  if (!body.message) {
+    throw createError({
+      status: 400,
+      message: 'REGISTER_MISSING_MESSAGE',
+    })
+  }
+  if (!body.signature) {
+    throw createError({
+      status: 400,
+      message: 'REGISTER_MISSING_SIGNATURE',
     })
   }
 
