@@ -112,10 +112,6 @@ export default defineEventHandler(async (event) => {
     return userInfo
   }
   catch (error) {
-    if ((error as Error).message === 'LIKECOIN_WALLET_ADDRESS_NOT_FOUND') {
-      throw error
-    }
-
     console.error(error)
     throw createError({
       status: 401,
