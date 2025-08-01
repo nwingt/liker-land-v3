@@ -52,9 +52,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const config = useRuntimeConfig()
   try {
-    await $fetch(`${config.public.likeCoinAPIEndpoint}/users/new`, {
+    await getLikeCoinAPIFetch()('/users/new', {
       method: 'POST',
       body: {
         from: body.walletAddress,

@@ -49,15 +49,14 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const config = useRuntimeConfig()
   let likeWallet: string | undefined
   let jwtId: string | undefined
   let token: string | undefined
   try {
-    const authorizeRes = await $fetch<{
+    const authorizeRes = await getLikeCoinAPIFetch()<{
       jwtid: string
       token: string
-    }>(`${config.public.likeCoinAPIEndpoint}/wallet/authorize`, {
+    }>('/wallet/authorize', {
       method: 'POST',
       body: {
         wallet: body.walletAddress,
