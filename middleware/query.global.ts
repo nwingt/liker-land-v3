@@ -2,6 +2,8 @@ import type { LocationQueryRaw } from 'vue-router'
 
 const CARRY_ON_QUERY_KEYS = [
   'from',
+  'll_medium',
+  'll_source',
   'utm_campaign',
   'utm_medium',
   'utm_source',
