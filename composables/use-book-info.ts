@@ -80,6 +80,10 @@ export default function (
     }))
   })
 
+  const sortedContentURLs = computed(() => {
+    return [...contentURLs.value].sort(compareContentURL)
+  })
+
   const defaultContentURL = computed(() => {
     return contentURLs.value.find(url => url.type === 'epub') || contentURLs.value[0]
   })
@@ -232,6 +236,7 @@ export default function (
     inLanguage,
 
     contentURLs,
+    sortedContentURLs,
     defaultContentURL,
     contentTypes,
     formattedContentTypes,
