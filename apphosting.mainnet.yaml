@@ -39,8 +39,6 @@ env:
     value: southeastasia
   - variable: AZURE_SUBSCRIPTION_KEY
     secret: AZURE_SUBSCRIPTION_KEY
-  - variable: IS_MAINTENANCE_MODE
-    value: FALSE
   - variable: IPFS_ENDPOINT
     value: https://w3s.link/ipfs
   - variable: LIKECOIN_API_ENDPOINT

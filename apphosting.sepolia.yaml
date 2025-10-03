@@ -37,8 +37,6 @@ env:
     value: southeastasia
   - variable: AZURE_SUBSCRIPTION_KEY
     secret: AZURE_SUBSCRIPTION_KEY
-  - variable: IS_MAINTENANCE_MODE
-    value: FALSE
   - variable: IS_TESTNET
     value: TRUE
   - variable: IPFS_ENDPOINT
