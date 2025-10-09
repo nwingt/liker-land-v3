@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import type { NitroRouteConfig } from 'nitropack'
 
 const {
   GA_TRACKING_ID,
@@ -26,6 +27,7 @@ export default defineNuxtConfig({
     '@nuxtjs/sitemap',
     'v-gsap-nuxt',
     '@vite-pwa/nuxt',
+    'nuxt-og-image',
   ],
 
   devtools: { enabled: true },
@@ -114,7 +116,7 @@ export default defineNuxtConfig({
           allowHeaders: ['Content-Type', 'Authorization'],
         },
       },
-    },
+    } as NitroRouteConfig,
     '/api/store/tags': {
       security: {
         corsHandler: {
@@ -124,7 +126,7 @@ export default defineNuxtConfig({
           allowHeaders: ['Content-Type', 'Authorization'],
         },
       },
-    },
+    } as NitroRouteConfig,
   },
 
   sourcemap: {
@@ -180,6 +182,17 @@ export default defineNuxtConfig({
     lazy: true,
     defaultLocale: 'zh-Hant',
     detectBrowserLanguage: false,
+  },
+
+  ogImage: {
+    fonts: [
+      // For English
+      'Work+Sans:400',
+      'Work+Sans:600',
+      // For Chinese
+      'Noto+Sans+TC:400',
+      'Noto+Sans+TC:600',
+    ],
   },
 
   pwa: {
