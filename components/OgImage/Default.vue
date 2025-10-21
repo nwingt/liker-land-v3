@@ -11,7 +11,7 @@
       ]"
     >
       <AppLogo
-        class="w-[624]"
+        class="w-[624px]"
         :height="96"
         :is-icon="false"
         :is-padded="false"
