@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-const { public: isTestnet } = useRuntimeConfig()
+const { public: { isTestnet } } = useRuntimeConfig()
 
 const props = defineProps({
   height: {
@@ -95,7 +95,7 @@ const fullLogoViewBox = computed(() => [
 
 const fullLogoTransform = computed(() => {
   if (!props.isPadded) return undefined
-  return `transform(${props.paddingX}, ${props.paddingY})`
+  return `translate(${props.paddingX}, ${props.paddingY})`
 })
 
 const height = computed(() => {

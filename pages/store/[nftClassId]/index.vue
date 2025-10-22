@@ -54,6 +54,7 @@
           :items="infoTabItems"
           variant="link"
           class="gap-6 w-full mt-[52px] tablet:mt-[80px]"
+          :unmount-on-hide="false"
           :ui="{ list: 'gap-6 border-0', trigger: 'text-lg font-bold pb-0 px-0', indicator: 'border-1' }"
         >
           <template #description>
@@ -253,7 +254,7 @@
                   class="cursor-pointer"
                   size="xl"
                   :loading="isPurchasing"
-                  :disabled="isSelectedPricingItemSoldOut || isPurchasing"
+                  :disabled="!canBePurchased"
                   block
                   @click="handlePurchaseButtonClick"
                 />
@@ -407,7 +408,7 @@
           color="primary"
           size="xl"
           :loading="isPurchasing"
-          :disabled="isSelectedPricingItemSoldOut || isPurchasing"
+          :disabled="!canBePurchased"
           block
           @click="handleStickyPurchaseButtonClick"
         />
@@ -573,7 +574,7 @@ const meta = [
   ...generateOGMetaTags({ selectedPricingItemIndex: selectedPricingItemIndex.value }),
 ]
 
-if (bookInfo.isHidden.value) {
+if (bookInfo.isHidden.value || !bookInfo.isApprovedForIndexing.value) {
   meta.push({ name: 'robots', content: 'noindex, nofollow' })
 }
 
@@ -716,6 +717,10 @@ const isSelectedPricingItemSoldOut = computed(() => {
   return !!selectedPricingItem.value?.isSoldOut
 })
 
+const canBePurchased = computed(() => {
+  return !isSelectedPricingItemSoldOut.value && !isPurchasing.value && bookInfo.isApprovedForSale.value
+})
+
 const getContentTypeLabel = useContentTypeLabel()
 
 function handleContentURLClick(contentURL: ContentURL) {
@@ -779,11 +784,13 @@ onMounted(() => {
   checkBookListStatus()
 })
 
+const { copy: copyToClipboard } = useClipboard()
+
 async function handleSocialButtonClick(key: string) {
   switch (key) {
     case 'copy-links':
       try {
-        await navigator.clipboard.writeText(window.location.href)
+        await copyToClipboard(window.location.href)
         toast.add({
           title: $t('copy_link_success'),
           duration: 3000,
