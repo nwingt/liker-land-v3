@@ -331,11 +331,14 @@ const isShowTTSSamples = computed(() => shouldShowTTSSamples.value || abTest?.is
 const utmCampaign = computed(() => {
   return getRouteQuery('utm_campaign') || props.utmCampaign
 })
+const campaignId = computed(() => {
+  return getRouteQuery('utm_term') || utmCampaign.value
+})
 
 const {
   campaignContent,
   isBlocktrendCampaign,
-} = usePricingPageCampaign({ campaignId: utmCampaign })
+} = usePricingPageCampaign({ campaignId })
 
 const isFullscreenModal = computed(() => props.isFullscreen || isScreenSmall.value)
 
