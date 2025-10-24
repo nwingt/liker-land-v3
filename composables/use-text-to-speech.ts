@@ -1,4 +1,4 @@
-import { useDebounceFn, isIOS, useStorage } from '@vueuse/core'
+import { useDebounceFn, useStorage } from '@vueuse/core'
 
 interface TTSOptions {
   nftClassId?: string
@@ -23,7 +23,6 @@ export function useTextToSpeech(options: TTSOptions = {}) {
 
   const nftClassId = options.nftClassId
 
-  const { $pwa } = useNuxtApp()
   const config = useRuntimeConfig()
 
   // Use the TTS voice composable
@@ -133,6 +132,7 @@ export function useTextToSpeech(options: TTSOptions = {}) {
     audioBuffers.value.forEach((audio) => {
       if (audio) {
         audio.playbackRate = newRate
+        audio.defaultPlaybackRate = newRate
         useLogEvent('tts_playback_rate_change', {
           nft_class_id: nftClassId,
           value: newRate,
@@ -159,6 +159,7 @@ export function useTextToSpeech(options: TTSOptions = {}) {
     if (!audio) {
       audio = new Audio()
       audioBuffers.value[bufferIndex] = audio
+      audio.preload = 'auto'
 
       audio.onplay = () => {
         isTextToSpeechPlaying.value = true
@@ -173,15 +174,27 @@ export function useTextToSpeech(options: TTSOptions = {}) {
         playNextElement()
       }
 
-      audio.onerror = (e) => {
-        const error = audio?.error || e
-        console.warn('Audio playback error:', error)
-        options.onError?.(error)
-        setTimeout(() => {
-          if (isTextToSpeechOn.value && isTextToSpeechPlaying.value) {
-            playNextElement()
+      audio.onstalled = () => {
+        if (bufferIndex === currentBufferIndex.value && audio) {
+          console.warn(`Audio playback stalled at ${ttsPlaybackRate.value}x for text: "${audio.getAttribute('data-text')}"`)
+          if (audio.currentTime < 0.00001) {
+            // Safari on iOS sometimes gets stuck at 0.000001 for rate > 1.0
+            audio.playbackRate = 1.0
           }
-        }, 1000) // Try next element after 1 second
+        }
+      }
+
+      audio.onerror = (e) => {
+        if (bufferIndex === currentBufferIndex.value) {
+          const error = audio?.error || e
+          console.warn('Audio playback error:', error)
+          options.onError?.(error)
+          setTimeout(() => {
+            if (isTextToSpeechOn.value && isTextToSpeechPlaying.value) {
+              playNextElement()
+            }
+          }, 1000) // Try next element after 1 second
+        }
       }
     }
 
@@ -198,8 +211,9 @@ export function useTextToSpeech(options: TTSOptions = {}) {
       audio.src = `/api/reader/tts?${params.toString()}`
     }
 
-    audio.playbackRate = ttsPlaybackRate.value
+    audio.defaultPlaybackRate = ttsPlaybackRate.value
     audio.setAttribute('data-text', element.text)
+    audio.load()
 
     return audio
   }
@@ -208,13 +222,7 @@ export function useTextToSpeech(options: TTSOptions = {}) {
     const currentElement = ttsSegments.value[currentTTSSegmentIndex.value]
     if (!currentElement) return
 
-    // Double buffer breaks background audio playback in iOS PWA
-    // Only switch buffers when NOT running as an installed iOS PWA
-    if (!isIOS || !$pwa?.isPWAInstalled) {
-      stopActiveAudio()
-      currentBufferIndex.value = idleBufferIndex.value
-    }
-
+    stopActiveAudio()
     const currentAudio = createAudio(currentElement, currentBufferIndex.value)
     currentAudio.play()
 
@@ -245,10 +253,6 @@ export function useTextToSpeech(options: TTSOptions = {}) {
       currentTTSSegmentIndex.value = Math.max(Math.min(index, ttsSegments.value.length - 1), 0)
     }
     else if (isTextToSpeechOn.value) {
-      const idleAudio = audioBuffers.value[idleBufferIndex.value]
-      if (idleAudio) {
-        idleAudio.pause()
-      }
       const activeAudio = audioBuffers.value[currentBufferIndex.value]
       if (activeAudio) {
         activeAudio.play()
