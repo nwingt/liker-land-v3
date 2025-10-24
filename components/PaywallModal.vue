@@ -395,6 +395,10 @@ const subscribeButtonLabel = computed(() => {
 
 onMounted(() => {
   emit('open')
+
+  if (campaignContent.value) {
+    useLogEvent(`pricing_page_campaign_${campaignContent.value.id}`)
+  }
 })
 
 const onOpenUpdate = (open: boolean) => {
