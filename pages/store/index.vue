@@ -597,7 +597,7 @@ async function fetchItems({ lazy = false, isRefresh = false } = {}) {
     await Promise.all([
       bookstoreStore.fetchCMSProductsByTagId(localizedTagId.value, { isRefresh }),
       // NOTE: Fetch staking books for sorting items
-      bookstoreStore.fetchStakingBooks('total_staked', { isRefresh }).catch(() => {}),
+      bookstoreStore.fetchStakingBooks('total_staked', { isRefresh, limit: 100 }).catch(() => {}),
     ])
   }
   catch (error) {
