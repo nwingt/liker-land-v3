@@ -87,6 +87,7 @@ export async function fetchAirtableCMSPublicationsBySearchTerm(
     `/${config.public.airtableCMSPublicationsTableId}`,
     {
       params: {
+        view: 'search',
         pageSize,
         filterByFormula,
         offset,
