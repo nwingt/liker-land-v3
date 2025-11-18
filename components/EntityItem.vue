@@ -66,12 +66,12 @@ const label = computed(() => {
 const linkRoute = computed(() => {
   const query = props.entityType === 'author'
     ? {
-        author: props.name,
+        q: props.name,
         ll_medium: 'author-link',
         ll_source: 'product-page',
       }
     : {
-        publisher: props.name,
+        q: props.name,
         ll_medium: 'publisher-link',
         ll_source: 'product-page',
       }
