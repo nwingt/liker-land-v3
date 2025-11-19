@@ -21,17 +21,26 @@ const props = withDefaults(defineProps<{
 })
 
 const value = computed(() => {
-  if (typeof props.value === 'string') return props.value
+  let num = props.value
+  if (typeof num !== 'number') {
+    if (typeof num === 'string') {
+      num = num.replace(/,/g, '')
+    }
+    num = Number(num)
+  }
+  if (Number.isNaN(num)) {
+    return '-'
+  }
 
-  if (props.isCompact && props.value >= 10_000) {
+  if (props.isCompact && num >= 10_000) {
     const formatter = new Intl.NumberFormat('en-US', {
       notation: 'compact',
       compactDisplay: 'short',
     })
-    return formatter.format(props.value)
+    return formatter.format(num)
   }
 
-  return props.value.toLocaleString(undefined, {
+  return num.toLocaleString(undefined, {
     maximumFractionDigits: props.maximumFractionDigits,
   })
 })
