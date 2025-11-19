@@ -164,8 +164,12 @@
               class="size-4"
             />
             <span
-              class="text-sm font-semibold"
+              class="text-sm font-semibold grow"
               v-text="$t('governance_page_stake_like')"
+            />
+            <span
+              class="text-xs text-muted"
+              v-text="$t('amount_available', { amount: `${formattedLikeBalance} LIKE` })"
             />
           </h3>
           <div class="flex items-center gap-2">
@@ -181,20 +185,24 @@
                 <span class="text-sm">LIKE</span>
               </template>
             </UInput>
-            <UButton
-              :label="$t('amount_input_max')"
-              size="sm"
-              color="neutral"
-              variant="outline"
-              @click="handleMaxStake"
-            />
-            <UButton
-              :label="$t('amount_input_half')"
-              size="sm"
-              color="neutral"
-              variant="outline"
-              @click="handleHalfStake"
-            />
+            <UTooltip :text="maxDepositButtonTooltipText">
+              <UButton
+                label="99%"
+                size="sm"
+                color="neutral"
+                variant="outline"
+                @click="handleMaxStake"
+              />
+            </UTooltip>
+            <UTooltip :text="halfDepositButtonTooltipText">
+              <UButton
+                :label="$t('amount_input_half')"
+                size="sm"
+                color="neutral"
+                variant="outline"
+                @click="handleHalfStake"
+              />
+            </UTooltip>
           </div>
           <UButton
             :label="$t('governance_page_stake_button')"
@@ -301,6 +309,7 @@ const walletAddress = computed(() => user.value?.evmWallet || '')
 const governanceData = useGovernanceData(walletAddress)
 const { claimReward, restakeReward, withdraw } = useVeLikeContract()
 const { balanceOf } = useLikeCoinContract()
+const { likeBalance, formattedLikeBalance } = useLikeCoinBalance(walletAddress)
 
 const stakeAmount = ref(0)
 const withdrawAmount = ref(0)
@@ -308,6 +317,18 @@ const isAutoRestakeEnabledStorage = useStorage(`${cacheKeyPrefix}-deposit-autore
 const isAutoRestakeEnabled = ref(true)
 const isLoading = ref(false)
 const error = ref<string | null>(null)
+
+const maxDepositButtonTooltipText = computed(() => {
+  return Number(formatUnits(getPercentageAmount(likeBalance.value, 0.99), likeCoinTokenDecimals))
+    .toLocaleString(undefined, { maximumFractionDigits: 2 })
+    .concat(' LIKE')
+})
+
+const halfDepositButtonTooltipText = computed(() => {
+  return Number(formatUnits(likeBalance.value / 2n, likeCoinTokenDecimals))
+    .toLocaleString(undefined, { maximumFractionDigits: 2 })
+    .concat(' LIKE')
+})
 
 watch(isAutoRestakeEnabled, (newValue) => {
   isAutoRestakeEnabledStorage.value = newValue
@@ -461,7 +482,10 @@ async function handleMaxStake() {
   if (!walletAddress.value) return
   try {
     const balance = await balanceOf(walletAddress.value)
-    stakeAmount.value = Number(formatUnits(balance, likeCoinTokenDecimals))
+    stakeAmount.value = getPercentageAmount(
+      Number(formatUnits(balance, likeCoinTokenDecimals)),
+      0.99,
+    )
   }
   catch (err) {
     console.error('Error fetching LIKE balance:', err)
@@ -474,7 +498,7 @@ async function handleHalfStake() {
   if (!walletAddress.value) return
   try {
     const balance = await balanceOf(walletAddress.value)
-    stakeAmount.value = Number(formatUnits(balance / 2n, likeCoinTokenDecimals))
+    stakeAmount.value = Math.floor(Number(formatUnits(balance / 2n, likeCoinTokenDecimals)) * 100) / 100
   }
   catch (err) {
     console.error('Error fetching LIKE balance:', err)
@@ -492,7 +516,7 @@ function handleHalfWithdraw() {
   useLogEvent('withdraw_half_button_click')
 
   if (governanceData.veLikeBalance.value === 0n) return
-  withdrawAmount.value = Number(formatUnits(governanceData.veLikeBalance.value / 2n, likeCoinTokenDecimals))
+  withdrawAmount.value = Math.floor(Number(formatUnits(governanceData.veLikeBalance.value / 2n, likeCoinTokenDecimals)) * 100) / 100
 }
 
 function formatLockTimeRemaining(secondsRemaining: number): string {
