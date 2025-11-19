@@ -384,7 +384,7 @@ async function handleStake() {
 
     toast.add({
       title: $t('governance_page_success'),
-      description: $t('governance_page_staked'),
+      description: $t('governance_page_staked', { amount: stakeAmount.value.toFixed(2) }),
       color: 'success',
     })
     stakeAmount.value = 0

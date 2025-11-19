@@ -219,7 +219,7 @@
   "governance_page_stake_button": "Deposit",
   "governance_page_stake_error": "Failed to stake LIKE tokens",
   "governance_page_stake_like": "Deposit LIKE",
-  "governance_page_staked": "Successfully staked LIKE tokens",
+  "governance_page_staked": "{amount} LIKE have been deposited",
   "governance_page_staked_balance": "Total Deposit Balance",
   "governance_page_staked_subtitle": "Amount of LIKE tokens deposited",
   "governance_page_success": "Success",

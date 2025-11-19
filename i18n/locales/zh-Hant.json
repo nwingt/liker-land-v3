@@ -219,7 +219,7 @@
   "governance_page_stake_button": "存倉",
   "governance_page_stake_error": "質押 LIKE 代幣失敗",
   "governance_page_stake_like": "存倉 LikeCoin",
-  "governance_page_staked": "成功質押 LIKE 代幣",
+  "governance_page_staked": "已把 {amount} LIKE 存倉",
   "governance_page_staked_balance": "存倉總額",
   "governance_page_staked_subtitle": "存倉的 LIKE 通證數量",
   "governance_page_success": "成功",
