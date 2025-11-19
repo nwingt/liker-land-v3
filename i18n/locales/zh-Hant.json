@@ -203,6 +203,7 @@
   "footer_terms": "使用條款",
   "governance_page_accumulated_rewards": "累積收益",
   "governance_page_amount_placeholder": "輸入要存倉的金額",
+  "governance_page_apy": "{percentage} 年化收益率",
   "governance_page_auto_restake": "收益自動存倉",
   "governance_page_claim_rewards": "提領收益",
   "governance_page_claim_rewards_and_restake": "提領收益並存倉",

@@ -88,20 +88,29 @@
 
         <!-- Estimated Rewards Per Day -->
         <div class="px-4 py-4 flex items-start justify-between">
-          <div class="flex items-start gap-3">
+          <div class="flex items-start gap-3 grow">
             <UIcon
               name="i-material-symbols-trending-up-rounded"
               class="size-5 text-primary mt-1 shrink-0"
             />
-            <div class="flex flex-col">
+            <div class="flex flex-col grow">
               <span
                 class="text-sm font-semibold"
                 v-text="$t('governance_page_estimated_rewards')"
               />
-              <BalanceLabel
-                class="text-2xl mt-1"
-                :value="governanceData.estimatedRewardPerDay.value"
-              />
+              <div class="flex items-center justify-between gap-1 flex-wrap">
+                <BalanceLabel
+                  class="text-2xl mt-1"
+                  :value="governanceData.formattedEstimatedRewardPerDay.value"
+                />
+                <UBadge
+                  v-if="governanceData.estimatedRewardAPY.value > 0"
+                  class="font-semibold whitespace-nowrap rounded-full"
+                  :label="$t('governance_page_apy', { percentage: governanceData.formattedEstimatedRewardAPY.value })"
+                  color="neutral"
+                  variant="subtle"
+                />
+              </div>
             </div>
           </div>
         </div>

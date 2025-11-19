@@ -203,6 +203,7 @@
   "footer_terms": "Terms",
   "governance_page_accumulated_rewards": "Accumulated Rewards",
   "governance_page_amount_placeholder": "Enter amount to deposit",
+  "governance_page_apy": "{percentage} APY",
   "governance_page_auto_restake": "Auto Deposit",
   "governance_page_claim_rewards": "Claim Rewards",
   "governance_page_claim_rewards_and_restake": "Claim Rewards and Deposit",
