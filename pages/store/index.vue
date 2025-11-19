@@ -137,6 +137,7 @@
           <template #body>
             <form
               class="w-full"
+              action="."
               @submit.prevent="handleSearchSubmit"
             >
               <UInput
@@ -146,10 +147,12 @@
                 size="xl"
                 variant="none"
                 :placeholder="$t('store_search_input_placeholder')"
+                type="search"
                 :ui="{
                   base: 'py-5',
                   trailing: 'pe-2',
                 }"
+                @blur="isSearchInputOpen = false"
               >
                 <template
                   v-if="searchInputValue.length"
