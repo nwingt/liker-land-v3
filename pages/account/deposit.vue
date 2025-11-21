@@ -146,18 +146,18 @@
             :disabled="!isClaimRewardButtonEnabled"
             @click="handleClaimRewards"
           />
-        </div>
 
-        <!-- Auto Restake Checkbox -->
-        <div class="px-4 py-4 flex items-center justify-between">
-          <span
-            class="text-sm font-semibold"
-            v-text="$t('governance_page_auto_restake')"
-          />
-          <USwitch
-            v-model="isAutoRestakeEnabled"
-            @update:model-value="handleAutoRestakeSwitchChange"
-          />
+          <!-- Auto Restake Checkbox -->
+          <div class="flex items-center justify-between mt-2">
+            <span
+              class="text-sm font-semibold"
+              v-text="$t('governance_page_auto_restake')"
+            />
+            <USwitch
+              v-model="isAutoRestakeEnabled"
+              @update:model-value="handleAutoRestakeSwitchChange"
+            />
+          </div>
         </div>
       </UCard>
     </section>
