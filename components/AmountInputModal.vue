@@ -66,7 +66,7 @@
 <script lang="ts" setup>
 import { formatUnits, parseUnits } from 'viem'
 
-const { likeCoinTokenDecimals } = useRuntimeConfig().public
+const { likeCoinTokenDecimals, likeCoinTokenSymbol } = useRuntimeConfig().public
 
 const quickAmounts = [1, 10, 100, 1000]
 
@@ -79,8 +79,10 @@ const props = withDefaults(defineProps<{
   confirmButtonTitle?: string
   helpText?: string
 }>(), {
-  ticker: 'LIKE',
+  ticker: '',
 })
+
+const ticker = computed(() => props.ticker || likeCoinTokenSymbol)
 
 const emit = defineEmits(['close'])
 
@@ -93,7 +95,7 @@ const maxAmount = computed(() => {
 })
 
 const formattedMaxAmount = computed(() => {
-  return maxAmount.value.toLocaleString(undefined, { maximumFractionDigits: 2 }).concat(' LIKE')
+  return maxAmount.value.toLocaleString(undefined, { maximumFractionDigits: 2 }).concat(` ${likeCoinTokenSymbol}`)
 })
 
 function handleMaxButtonClick() {

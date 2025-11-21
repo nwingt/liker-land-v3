@@ -31,6 +31,14 @@
             class="text-xs text-muted mt-2"
             v-text="$t('governance_page_staked_subtitle')"
           />
+          <UButton
+            v-if="!accountStore.isLoginWithMagic"
+            class="mt-2"
+            :label="$t('governance_page_watch_token_button_label', { symbol: likeCoinTokenSymbol })"
+            variant="soft"
+            size="xs"
+            @click="handleWatchTokenButtonClick"
+          />
         </UCard>
 
         <!-- My Voting Power Card -->
@@ -48,11 +56,19 @@
           <BalanceLabel
             class="text-xl"
             :value="governanceData.totalVotingPower.value"
-            currency="veLIKE"
+            :currency="likeCoinVeTokenSymbol"
           />
           <div
             class="text-xs text-muted mt-2"
             v-text="$t('governance_page_voting_subtitle')"
+          />
+          <UButton
+            v-if="!accountStore.isLoginWithMagic"
+            class="mt-2"
+            :label="$t('governance_page_watch_token_button_label', { symbol: likeCoinVeTokenSymbol })"
+            variant="soft"
+            size="xs"
+            @click="handleWatchVeTokenButtonClick"
           />
         </UCard>
       </div>
@@ -169,7 +185,7 @@
             />
             <span
               class="text-xs text-muted"
-              v-text="$t('amount_available', { amount: `${formattedLikeBalance} LIKE` })"
+              v-text="$t('amount_available', { amount: `${formattedLikeBalance} ${likeCoinTokenSymbol}` })"
             />
           </h3>
           <div class="flex items-center gap-2">
@@ -182,7 +198,10 @@
               class="flex-1"
             >
               <template #trailing>
-                <span class="text-sm">LIKE</span>
+                <span
+                  class="text-sm"
+                  v-text="likeCoinTokenSymbol"
+                />
               </template>
             </UInput>
             <UTooltip :text="maxDepositButtonTooltipText">
@@ -250,7 +269,10 @@
               class="flex-1"
             >
               <template #trailing>
-                <span class="text-sm">LIKE</span>
+                <span
+                  class="text-sm"
+                  v-text="likeCoinVeTokenSymbol"
+                />
               </template>
             </UInput>
             <UButton
@@ -295,14 +317,22 @@
 import { useStorage } from '@vueuse/core'
 import { formatUnits, parseUnits } from 'viem'
 
-import { waitForTransactionReceipt } from '@wagmi/core'
+import { waitForTransactionReceipt, watchAsset } from '@wagmi/core'
 
-const { likeCoinTokenDecimals, cacheKeyPrefix } = useRuntimeConfig().public
+const {
+  cacheKeyPrefix,
+  likeCoinTokenAddress,
+  likeCoinTokenDecimals,
+  likeCoinTokenSymbol,
+  likeCoinVeTokenAddress,
+  likeCoinVeTokenSymbol,
+} = useRuntimeConfig().public
 const { $wagmiConfig } = useNuxtApp()
 const accountStore = useAccountStore()
 const { t: $t } = useI18n()
 const toast = useToast()
 const { loggedIn: hasLoggedIn, user } = useUserSession()
+const { handleError } = useErrorHandler()
 
 const walletAddress = computed(() => user.value?.evmWallet || '')
 
@@ -321,13 +351,13 @@ const error = ref<string | null>(null)
 const maxDepositButtonTooltipText = computed(() => {
   return Number(formatUnits(getPercentageAmount(likeBalance.value, 0.99), likeCoinTokenDecimals))
     .toLocaleString(undefined, { maximumFractionDigits: 2 })
-    .concat(' LIKE')
+    .concat(` ${likeCoinTokenSymbol}`)
 })
 
 const halfDepositButtonTooltipText = computed(() => {
   return Number(formatUnits(likeBalance.value / 2n, likeCoinTokenDecimals))
     .toLocaleString(undefined, { maximumFractionDigits: 2 })
-    .concat(' LIKE')
+    .concat(` ${likeCoinTokenSymbol}`)
 })
 
 watch(isAutoRestakeEnabled, (newValue) => {
@@ -536,6 +566,42 @@ function formatLockTimeRemaining(secondsRemaining: number): string {
   }
   else {
     return $t('governance_page_unlock_time_minutes', { minutes })
+  }
+}
+
+async function handleWatchTokenButtonClick() {
+  useLogEvent('watch_token_button_click')
+  try {
+    await accountStore.restoreConnection()
+    await watchAsset($wagmiConfig, {
+      type: 'ERC20',
+      options: {
+        address: likeCoinTokenAddress,
+        symbol: likeCoinTokenSymbol,
+        decimals: likeCoinTokenDecimals,
+      },
+    })
+  }
+  catch (error) {
+    await handleError(error)
+  }
+}
+
+async function handleWatchVeTokenButtonClick() {
+  useLogEvent('watch_ve_token_button_click')
+  try {
+    await accountStore.restoreConnection()
+    await watchAsset($wagmiConfig, {
+      type: 'ERC20',
+      options: {
+        address: likeCoinVeTokenAddress,
+        symbol: likeCoinVeTokenSymbol,
+        decimals: likeCoinTokenDecimals,
+      },
+    })
+  }
+  catch (error) {
+    await handleError(error)
   }
 }
 </script>

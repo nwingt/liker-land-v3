@@ -121,7 +121,7 @@ const props = defineProps<{
 }>()
 
 const config = useRuntimeConfig()
-const { likeCoinTokenDecimals, isTestnet } = config.public
+const { likeCoinTokenDecimals, likeCoinTokenSymbol, isTestnet } = config.public
 
 const { t: $t } = useI18n()
 const toast = useToast()
@@ -189,7 +189,7 @@ async function handleStakeButtonClick() {
     title: $t('staking_stake_please_enter_amount'),
     max: getPercentageAmount(likeBalance.value, 0.99),
     maxButtonLabel: '99%',
-    helpText: $t('amount_available', { amount: `${formattedLikeBalance} LIKE` }),
+    helpText: $t('amount_available', { amount: `${formattedLikeBalance} ${likeCoinTokenSymbol}` }),
   }).result
 
   if (!isValidStakeAmount.value) return
@@ -243,7 +243,7 @@ async function handleUnstakeButtonClick() {
   stakeAmount.value = await amountInputModal.open({
     title: $t('staking_unstake_please_input_amount'),
     max: userStake.value,
-    helpText: $t('amount_available', { amount: `${formattedUserStake} LIKE` }),
+    helpText: $t('amount_available', { amount: `${formattedUserStake} ${likeCoinTokenSymbol}` }),
   }).result
 
   if (!isValidStakeAmount.value) return

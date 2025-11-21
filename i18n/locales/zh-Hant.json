@@ -229,6 +229,7 @@
   "governance_page_unlock_time_minutes": "將在 {minutes} 分鐘後開放提取",
   "governance_page_voting_power": "我的話語權",
   "governance_page_voting_subtitle": "我在社群議案的投票份額",
+  "governance_page_watch_token_button_label": "於 MetaMask 顯示",
   "governance_page_withdraw_button": "提領",
   "governance_page_withdraw_error": "提取 LIKE 代幣失敗",
   "governance_page_withdraw_like": "提領 LikeCoin",

@@ -15,10 +15,14 @@ const props = withDefaults(defineProps<{
 }>(), {
   value: 0,
   maximumFractionDigits: 2,
-  currency: 'LIKE',
+  currency: '',
   isBold: true,
   isCompact: false,
 })
+
+const config = useRuntimeConfig()
+
+const currency = computed(() => props.currency || config.public.likeCoinTokenSymbol)
 
 const value = computed(() => {
   let num = props.value
