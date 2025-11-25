@@ -108,8 +108,8 @@ export function useGovernanceData(walletAddress: string | Ref<string>) {
     if (!veLikeBalance.value || !estimatedRewardPerDay.value) {
       return 0
     }
-    const dailyRate = estimatedRewardPerDay.value / Number(formatUnits(veLikeBalance.value, likeCoinTokenDecimals))
-    return Math.pow(1 + dailyRate, 365) - 1
+    // NOTE: Actually is APR
+    return estimatedRewardPerDay.value * 365 / Number(formatUnits(veLikeBalance.value, likeCoinTokenDecimals))
   })
 
   const formattedEstimatedRewardAPY = computed(() => {
