@@ -22,6 +22,8 @@ const CAMPAIGNS: Record<string, PricingPageCampaign> = {
   },
   'xmas2025': {
     type: 'video',
+    title: '冬日慢活\n讓閱讀變得更自在，讓你成為更有趣的人',
+    description: '閱讀與聽書，隨時切換，不限手機／平板／電腦',
   },
 }
 
