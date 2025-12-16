@@ -97,7 +97,9 @@ export function useSubscription() {
       upsellPlusModal.close()
     }
 
-    if (!isLikerPlus.value || likerPlusPeriod.value === 'month') {
+    const shouldShowMonthlyPlan = !isLikerPlus.value && !props.from
+    const shouldShowYearlyPlan = !isLikerPlus.value || likerPlusPeriod.value === 'month'
+    if (shouldShowMonthlyPlan || shouldShowYearlyPlan) {
       // Only pass nftClassId if book price is <= Plus yearly price
       // This way expensive books won't show the "gift book" option, only 20% off
       let nftClassId = props.nftClassId

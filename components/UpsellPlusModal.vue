@@ -149,10 +149,7 @@ const { currency } = useSubscriptionPricing()
 const selectedPlan = ref<SubscriptionPlan>('yearly')
 
 const shouldShowMonthlyPlan = computed(() => !props.isLikerPlus && !props.from)
-const shouldShowYearlyPlan = computed(() => (
-  shouldShowMonthlyPlan.value
-  || (props.isLikerPlus && props.likerPlusPeriod === 'month')
-))
+const shouldShowYearlyPlan = computed(() => !props.isLikerPlus || props.likerPlusPeriod === 'month')
 
 const isAllowYearlyTrial = computed(() => !props.nftClassId)
 
