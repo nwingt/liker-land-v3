@@ -21,9 +21,9 @@
 const metadataStore = useMetadataStore()
 const { t: $t } = useI18n()
 const getRouteQuery = useRouteQuery()
+const isCacheDisabled = useNoCache()
 
 const from = computed(() => getRouteQuery('from'))
-const isCacheDisabled = computed(() => getRouteQuery('nocache') === '1')
 
 const affiliateId = computed(() => {
   return from.value?.startsWith('@') ? from.value.slice(1) : undefined
