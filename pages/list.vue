@@ -22,6 +22,7 @@
         <header class="sticky top-0 z-10 grid grid-cols-12 items-center py-2 text-muted bg-(--app-bg) leading-none border-b border-black/10">
           <div class="col-span-1">
             <UCheckbox
+              v-if="!isApp"
               :model-value="hasSelectedItems"
               @update:model-value="handleSelectAllUpdate"
             />
@@ -30,6 +31,7 @@
             <span v-text="$t('book_list_header_item_label')" />
 
             <UButton
+              v-if="!isApp"
               :label="$t('book_list_checkout_button_label')"
               :loading="isCheckingOut"
               :disabled="!hasSelectedItems"
@@ -107,6 +109,7 @@ const { handleError } = useErrorHandler()
 const likeCoinSessionAPI = useLikeCoinSessionAPI()
 const { getAnalyticsParameters } = useAnalytics()
 const { getCheckoutCurrency } = usePaymentCurrency()
+const { isApp } = useAppDetection()
 
 useHead({ title: $t('book_list_title') })
 
