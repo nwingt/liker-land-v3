@@ -39,7 +39,7 @@
           >
             <UIcon
               :name="icon"
-              class="text-gray-600 group-hover:text-gray-800 transition-colors duration-200"
+              class="text-muted group-hover:text-gray-800 transition-colors duration-200"
               size="20"
             />
           </div>
@@ -52,7 +52,7 @@
           />
           <div
             v-if="sample.description"
-            class="text-sm text-gray-500 truncate group-hover:text-gray-600 transition-colors duration-200"
+            class="text-sm text-gray-500 truncate group-hover:text-muted transition-colors duration-200"
             v-text="sample.description"
           />
         </div>
